@@ -148,8 +148,12 @@ object AkkaBuild {
           // faster random source
           "-Djava.security.egd=file:/dev/./urandom")
 
-        if (sys.props.contains("akka.ci-server"))
-          defaults ++ Seq("-XX:+PrintGCTimeStamps", "-XX:+PrintGCDetails")
+        if (sys.props.contains("akka.ci-server")) {
+          if (isJDK9)
+            defaults ++ Seq("-Xlog:gc", "-Xlog:gc*")
+          else
+            defaults ++ Seq("-XX:+PrintGCTimeStamps", "-XX:+PrintGCDetails")
+        }
         else
           defaults
       },
@@ -166,18 +170,7 @@ object AkkaBuild {
 
       // with forked tests the working directory is set to each module's home directory
       // rather than the Akka root, some tests depend on Akka root being working dir, so reset
-      testGrouping in Test := {
-        val original: Seq[Tests.Group] = (testGrouping in Test).value
-
-        original.map { group ⇒
-          group.runPolicy match {
-            case Tests.SubProcess(forkOptions) ⇒
-              group.copy(runPolicy = Tests.SubProcess(forkOptions.withWorkingDirectory(
-                workingDirectory = Some(new File(System.getProperty("user.dir"))))))
-            case _ ⇒ group
-          }
-        }
-      },
+      baseDirectory in test := file(System.getProperty("user.dir")),
 
       parallelExecution in Test := System.getProperty("akka.parallelExecution", parallelExecutionByDefault.toString).toBoolean,
       logBuffered in Test := System.getProperty("akka.logBufferedTests", "false").toBoolean,
@@ -206,4 +199,9 @@ object AkkaBuild {
   }
 
   def majorMinor(version: String): Option[String] = """\d+\.\d+""".r.findFirstIn(version)
+
+  private def isJDK9 = {
+    val jdkVersion: String = System.getProperty("java.version")
+    jdkVersion startsWith "9"
+  }
 }

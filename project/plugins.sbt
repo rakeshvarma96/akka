@@ -13,8 +13,9 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.2")
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.1.18")
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0-M1")
 addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.1")
-addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "2.0.0") // FIXME broken on jdk9
+//addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "2.0.0") // FIXME broken on jdk9
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.27")
+//addSbtPlugin("pl.project13.sbt" % "sbt-jol" % "0.1.3") // TODO but not really needed for now
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.2-RC2")
 addSbtPlugin("io.spray" % "sbt-boilerplate" % "0.6.1")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.1")
