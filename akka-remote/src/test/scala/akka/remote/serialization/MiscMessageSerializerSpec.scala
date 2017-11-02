@@ -33,7 +33,9 @@ object MiscMessageSerializerSpec {
 
     override def equals(other: Any): Boolean = other match {
       case e: TestException ⇒
-        e.getMessage == getMessage && e.stackTrace == stackTrace && e.getCause == getCause
+        e.getMessage == getMessage &&
+          e.stackTrace.mkString.replaceAll("java\\.base/", "") == stackTrace.mkString.replaceAll("java\\.base/", "") &&
+          e.getCause == getCause
       case _ ⇒ false
     }
 
