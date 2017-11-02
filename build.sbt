@@ -19,6 +19,9 @@ akka.Release.settings
 shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
 resolverSettings
 
+val jdkVersion: String = System.getProperty("java.version")
+val isJDK9 = jdkVersion startsWith "9"
+
 lazy val aggregatedProjects: Seq[ProjectReference] = Seq(
   actor, actorTests,
   agent,
@@ -92,6 +95,9 @@ lazy val camel = akkaModule("akka-camel")
   .dependsOn(actor, slf4j, testkit % "test->test")
   .settings(Dependencies.camel)
   .settings(OSGi.camel)
+  .settings(
+    javaOptions in Test ++= { if (isJDK9) Seq("--add-modules", "java.xml.bind") else Seq() }
+  )
 
 lazy val cluster = akkaModule("akka-cluster")
   .dependsOn(remote, remoteTests % "test->test" , testkit % "test->test")
