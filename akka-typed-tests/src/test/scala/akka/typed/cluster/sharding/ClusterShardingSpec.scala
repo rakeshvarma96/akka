@@ -60,7 +60,7 @@ object ClusterShardingSpec {
   final case class WhoAreYou(replyTo: ActorRef[String]) extends TestProtocol
   final case class StopPlz() extends TestProtocol
 
-  sealed trait IdTestProtocol { def id: String }
+  sealed trait IdTestProtocol extends java.io.Serializable { def id: String }
   final case class IdReplyPlz(id: String, toMe: ActorRef[String]) extends IdTestProtocol
   final case class IdWhoAreYou(id: String, replyTo: ActorRef[String]) extends IdTestProtocol
   final case class IdStopPlz(id: String) extends IdTestProtocol
